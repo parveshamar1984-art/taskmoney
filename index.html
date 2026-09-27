@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAKS GAME - Task Money Game | DEMO</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #111827;
+    --bg-card: #1a2332;
+    --bg-dark: #0d1520;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent: #00d4ff;
+    --accent-2: #8b5cf6;
+    --accent-glow: rgba(0, 212, 255, 0.25);
+    --green: #00ff88;
+    --green-glow: rgba(0, 255, 136, 0.25);
+    --red: #ff3355;
+    --red-glow: rgba(255, 51, 85, 0.25);
+    --gold: #ffd700;
+    --gold-glow: rgba(255, 215, 0, 0.25);
+    --radius: 16px;
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html, body {
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+body { background: radial-gradient(ellipse at top, #1a1f3a 0%, #0a0e1a 60%); min-height: 100vh; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+/* TOP BAR */
+.top-demo-bar {
+    background: linear-gradient(90deg, #ff3355, #ff6b35);
+    color: #fff; font-size: 11px; font-weight: 700;
+    text-align: center; padding: 6px 12px;
+    letter-spacing: 0.5px; position: sticky; top: 0;
+    z-index: 1000;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* AUTH */
+.auth-wrap {
+    min-height: 100vh; display: flex; justify-content: center;
+    align-items: center; padding: 20px;
+    background: radial-gradient(circle at 20% 20%, rgba(0, 212, 255, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.15), transparent 50%),
+                var(--bg-primary);
+}
+.auth-card {
+    width: 100%; max-width: 420px;
+    background: rgba(26, 35, 50, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px; padding: 32px 28px;
+    box-shadow: var(--shadow);
+    animation: fadeUp 0.5s ease;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.auth-logo { text-align: center; margin-bottom: 24px; }
+.auth-logo .icon { font-size: 48px; margin-bottom: 8px; display: block; }
+.auth-logo h1 {
+    font-size: 26px; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.auth-logo p { color: var(--text-secondary); font-size: 12px; margin-top: 4px; }
+.auth-tabs { display: flex; background: var(--bg-dark); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+.auth-tab {
+    flex: 1; padding: 10px; text-align: center; cursor: pointer;
+    border-radius: 9px; font-weight: 600; font-size: 14px;
+    color: var(--text-secondary); transition: var(--transition);
+    border: none; background: transparent; font-family: inherit;
+}
+.auth-tab.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; }
+.form-group { margin-bottom: 14px; }
+.form-group label {
+    display: block; font-size: 12px; color: var(--text-secondary);
+    margin-bottom: 6px; font-weight: 600; text-transform: uppercase;
+}
+.form-group input {
+    width: 100%; padding: 12px 14px; background: var(--bg-dark);
+    border: 1px solid var(--glass-border); border-radius: 10px;
+    color: var(--text-primary); font-size: 14px; outline: none;
+    font-family: inherit; transition: var(--transition);
+}
+.form-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.checkbox-row { display: flex; align-items: center; gap: 10px; margin: 12px 0; font-size: 12px; color: var(--text-secondary); }
+.checkbox-row input { width: 18px; height: 18px; accent-color: var(--accent); }
+.btn {
+    padding: 12px 20px; border: none; border-radius: 10px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: var(--transition); text-transform: uppercase;
+    font-family: inherit;
+}
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; width: 100%; box-shadow: 0 4px 20px var(--accent-glow);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px var(--accent-glow); }
+.btn-danger { background: linear-gradient(135deg, var(--red), #cc2233); color: #fff; }
+.btn-ghost { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--glass-border); }
+.btn-ghost:hover { background: var(--accent); color: var(--bg-primary); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+.link-btn { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 13px; font-family: inherit; }
+.demo-notice {
+    background: rgba(255, 215, 0, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.25);
+    color: var(--gold); font-size: 11px; padding: 10px 12px;
+    border-radius: 8px; margin-top: 16px; text-align: center; line-height: 1.5;
+}
+
+/* APP */
+.app { display: none; min-height: 100vh; }
+.app.active { display: block; }
+.sidebar {
+    position: fixed; top: 28px; left: 0; bottom: 0;
+    width: 240px; background: var(--bg-secondary);
+    border-right: 1px solid var(--glass-border);
+    padding: 16px 0; overflow-y: auto; z-index: 500;
+    transition: transform 0.3s ease;
+}
+.sidebar-brand {
+    padding: 0 20px 16px; border-bottom: 1px solid var(--glass-border);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 10px;
+}
+.sidebar-brand .brand-icon { font-size: 28px; }
+.sidebar-brand .brand-text {
+    font-size: 16px; font-weight: 900;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.sidebar-brand .brand-sub { font-size: 9px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+.nav-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 20px; color: var(--text-secondary);
+    cursor: pointer; font-size: 13px; font-weight: 500;
+    border-left: 3px solid transparent; transition: var(--transition);
+    user-select: none;
+}
+.nav-item:hover { background: var(--glass); color: var(--text-primary); }
+.nav-item.active {
+    background: linear-gradient(90deg, var(--accent-glow), transparent);
+    color: var(--accent); border-left-color: var(--accent);
+}
+.nav-item .nav-icon { font-size: 18px; width: 22px; text-align: center; }
+.nav-item.logout { color: var(--red); margin-top: 12px; border-top: 1px solid var(--glass-border); padding-top: 16px; }
+.main { margin-left: 240px; padding: 24px; padding-top: 40px; min-height: 100vh; }
+
+/* CARDS */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px; }
+.page-title { font-size: 22px; font-weight: 800; }
+.page-subtitle { color: var(--text-secondary); font-size: 12px; margin-top: 4px; }
+.balance-chip {
+    background: var(--bg-card); border: 1px solid var(--glass-border);
+    border-radius: 30px; padding: 8px 16px;
+    display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 700;
+}
+.balance-chip .amt { color: var(--gold); }
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+    background: rgba(26, 35, 50, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 18px; transition: var(--transition);
+    animation: fadeUp 0.4s ease;
+}
+.card:hover { border-color: rgba(0, 212, 255, 0.3); }
+.card-static:hover { transform: none; }
+.stat-card { display: flex; flex-direction: column; gap: 8px; }
+.stat-card .stat-icon { font-size: 28px; }
+.stat-card .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+.stat-card .stat-value { font-size: 24px; font-weight: 800; }
+.stat-card .stat-value.gold { color: var(--gold); }
+.stat-card .stat-value.green { color: var(--green); }
+.stat-card .stat-value.accent { color: var(--accent); }
+
+.progress { width: 100%; height: 8px; background: var(--bg-dark); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    border-radius: 10px; transition: width 0.6s ease;
+}
+
+/* TASKS */
+.task-card {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 16px; background: rgba(26, 35, 50, 0.7);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px; transition: var(--transition);
+    animation: fadeUp 0.3s ease;
+}
+.task-card:hover { border-color: rgba(0, 212, 255, 0.4); transform: translateY(-2px); }
+.task-card.completed {
+    opacity: 0.7;
+    border-color: rgba(0, 255, 136, 0.4);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), transparent);
+}
+.task-icon {
+    font-size: 32px; width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-dark); border-radius: 12px; flex-shrink: 0;
+}
+.task-body { flex: 1; min-width: 0; }
+.task-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.task-desc { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.5; }
+.task-reward {
+    display: inline-block; background: var(--gold-glow); color: var(--gold);
+    font-size: 11px; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px; margin-bottom: 8px;
+}
+.task-btn {
+    padding: 10px 20px; border-radius: 8px; border: none;
+    font-size: 12px; font-weight: 700; cursor: pointer;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; transition: var(--transition);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    font-family: inherit;
+}
+.task-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 20px var(--accent-glow); }
+.task-btn:disabled { background: var(--bg-dark); color: var(--text-muted); cursor: not-allowed; }
+.task-btn.done { background: rgba(0, 255, 136, 0.2); color: var(--green); }
+
+/* TABLES */
+.table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--glass-border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 520px; }
+th, td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+th {
+    background: var(--bg-dark); color: var(--text-secondary);
+    font-size: 11px; text-transform: uppercase; font-weight: 700;
+}
+tbody tr:hover { background: var(--glass); }
+.badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+}
+.badge-success { background: var(--green-glow); color: var(--green); }
+.badge-warn { background: var(--gold-glow); color: var(--gold); }
+.badge-info { background: var(--accent-glow); color: var(--accent); }
+.badge-danger { background: var(--red-glow); color: var(--red); }
+.amt-pos { color: var(--green); font-weight: 700; }
+.amt-neg { color: var(--red); font-weight: 700; }
+.filters { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.filter-btn {
+    padding: 6px 14px; background: var(--bg-card);
+    border: 1px solid var(--glass-border); border-radius: 20px;
+    color: var(--text-secondary); cursor: pointer;
+    font-size: 12px; font-weight: 600;
+    transition: var(--transition); font-family: inherit;
+}
+.filter-btn.active, .filter-btn:hover { background: var(--accent); color: var(--bg-primary); }
+
+/* MODAL */
+.modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 2000; justify-content: center; align-items: center;
+    padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    max-width: 480px; width: 100%; max-height: 90vh;
+    overflow-y: auto; padding: 24px;
+    animation: modalIn 0.3s ease;
+}
+@keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-box h3 { font-size: 18px; margin-bottom: 12px; color: var(--accent); }
+.modal-box p { color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+.modal-actions .btn { flex: 1; }
+
+/* TOAST */
+.toast-wrap {
+    position: fixed; top: 60px; right: 16px;
+    z-index: 3000; display: flex; flex-direction: column;
+    gap: 8px; max-width: 340px; pointer-events: none;
+}
+.toast {
+    padding: 12px 16px; background: var(--bg-card);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px; color: var(--text-primary);
+    font-size: 13px; font-weight: 500;
+    box-shadow: var(--shadow);
+    animation: toastIn 0.3s ease;
+    display: flex; align-items: center; gap: 10px;
+    pointer-events: auto; backdrop-filter: blur(10px);
+}
+.toast.success { border-left-color: var(--green); }
+.toast.error { border-left-color: var(--red); }
+.toast.warning { border-left-color: var(--gold); }
+@keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toastOut { to { transform: translateX(100%); opacity: 0; } }
+
+/* QR */
+.qr-container { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.qr-box {
+    background: #fff; padding: 16px; border-radius: 16px;
+    display: inline-block; position: relative;
+    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.35);
+    border: 3px solid var(--accent);
+    transition: transform 0.3s;
+}
+.qr-box:hover { transform: scale(1.03); }
+.qr-box canvas { display: block; border-radius: 8px; }
+.qr-label {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; padding: 6px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 700; letter-spacing: 1px;
+}
+.qr-warning {
+    background: rgba(255, 51, 85, 0.1);
+    border: 1px solid rgba(255, 51, 85, 0.3);
+    color: var(--red); padding: 10px 14px; border-radius: 8px;
+    font-size: 11px; text-align: center; line-height: 1.6;
+}
+
+/* AMOUNT GRID */
+.amount-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px; margin-bottom: 16px;
+}
+.amount-btn {
+    padding: 14px; background: var(--bg-dark);
+    border: 2px solid var(--glass-border); border-radius: 12px;
+    color: var(--text-primary); font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: var(--transition); font-family: inherit;
+}
+.amount-btn:hover, .amount-btn.selected {
+    border-color: var(--accent); background: var(--accent-glow); color: var(--accent);
+}
+
+/* REWARDS */
+.reward-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+.reward-cell {
+    text-align: center; padding: 12px 6px;
+    background: var(--bg-dark);
+    border: 2px solid var(--glass-border);
+    border-radius: 12px; cursor: pointer;
+    transition: var(--transition); position: relative;
+}
+.reward-cell:hover { border-color: var(--accent); transform: translateY(-3px); }
+.reward-cell.claimed { background: var(--green-glow); border-color: var(--green); }
+.reward-cell.locked { opacity: 0.5; cursor: not-allowed; }
+.reward-cell .day { font-size: 10px; color: var(--text-muted); font-weight: 700; margin-bottom: 4px; }
+.reward-cell .rwd { font-size: 14px; font-weight: 800; color: var(--gold); }
+.reward-cell .chk { position: absolute; top: 4px; right: 4px; font-size: 12px; }
+
+/* ACHIEVEMENTS */
+.ach-card {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px; background: var(--bg-dark);
+    border: 1px solid var(--glass-border); border-radius: 12px;
+}
+.ach-card.unlocked { border-color: var(--gold); background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), transparent); }
+.ach-card .ach-icon { font-size: 32px; filter: grayscale(1); opacity: 0.4; }
+.ach-card.unlocked .ach-icon { filter: none; opacity: 1; }
+.ach-card .ach-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+.ach-card .ach-desc { font-size: 11px; color: var(--text-secondary); }
+.ach-status {
+    margin-left: auto; font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 20px;
+    background: var(--bg-card); color: var(--text-muted); flex-shrink: 0;
+}
+.ach-card.unlocked .ach-status { background: var(--gold-glow); color: var(--gold); }
+
+/* GAME */
+.game-wrap {
+    background: var(--bg-secondary); border-radius: var(--radius);
+    overflow: hidden; border: 1px solid var(--glass-border); padding: 16px;
+}
+.game-hud {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 8px; flex-wrap: wrap; margin-bottom: 12px;
+    font-size: 12px; font-weight: 700;
+}
+.hud-item {
+    background: var(--bg-dark); padding: 6px 12px;
+    border-radius: 8px; display: flex; align-items: center; gap: 6px;
+}
+.hud-item .val { color: var(--accent); }
+.hud-item .val.gold { color: var(--gold); }
+.hud-item .val.green { color: var(--green); }
+.hud-item .val.red { color: var(--red); }
+#gameCanvas {
+    display: block; width: 100%; background: #0a0e1a;
+    border-radius: 10px; touch-action: none; max-height: 60vh;
+}
+.mobile-controls {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 8px; margin-top: 12px; max-width: 260px;
+    margin-left: auto; margin-right: auto;
+}
+.dpad-btn {
+    padding: 14px; background: var(--bg-card);
+    border: 1px solid var(--glass-border); border-radius: 10px;
+    color: var(--text-primary); font-size: 20px; cursor: pointer;
+    font-family: inherit;
+}
+.dpad-btn:active { background: var(--accent); }
+.dpad-btn.up { grid-column: 2; }
+.dpad-btn.left { grid-column: 1; grid-row: 2; }
+.dpad-btn.down { grid-column: 2; grid-row: 2; }
+.dpad-btn.right { grid-column: 3; grid-row: 2; }
+
+/* SETTINGS */
+.setting-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px; background: var(--bg-dark);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px; margin-bottom: 10px;
+}
+.setting-row .lbl { font-size: 14px; font-weight: 600; }
+.setting-row .sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.toggle {
+    width: 48px; height: 26px; background: var(--bg-card);
+    border-radius: 20px; position: relative;
+    cursor: pointer; transition: var(--transition);
+    border: 1px solid var(--glass-border);
+}
+.toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 20px; height: 20px; background: var(--text-muted);
+    border-radius: 50%; transition: var(--transition);
+}
+.toggle.on { background: var(--accent); border-color: var(--accent); }
+.toggle.on::after { left: 24px; background: #fff; }
+
+/* MOBILE NAV */
+.mobile-nav {
+    display: none; position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--glass-border);
+    padding: 6px 0; z-index: 600; justify-content: space-around;
+}
+.mobile-nav .mob-item {
+    flex: 1; text-align: center; padding: 6px 2px;
+    color: var(--text-secondary); font-size: 10px; cursor: pointer;
+}
+.mobile-nav .mob-item .mob-icon { font-size: 20px; display: block; margin-bottom: 2px; }
+.mobile-nav .mob-item.active { color: var(--accent); }
+.menu-toggle {
+    display: none; position: fixed; top: 40px; left: 12px;
+    z-index: 700; background: var(--bg-card);
+    border: 1px solid var(--glass-border); color: var(--text-primary);
+    font-size: 20px; padding: 6px 12px; border-radius: 8px; cursor: pointer;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); width: 260px; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; padding: 16px; padding-top: 76px; padding-bottom: 80px; }
+    .menu-toggle { display: block; }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .mobile-nav { display: flex; }
+    .page-title { font-size: 18px; }
+}
+@media (max-width: 480px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .reward-grid { grid-template-columns: repeat(4, 1fr); }
+    .stat-card .stat-value { font-size: 20px; }
+    .toast-wrap { top: 50px; right: 8px; left: 8px; max-width: none; }
+}
+
+/* UTILITY */
+.hidden { display: none !important; }
+.text-muted { color: var(--text-muted); }
+.mt-1 { margin-top: 8px; }
+.mt-2 { margin-top: 16px; }
+.mb-1 { margin-bottom: 8px; }
+.mb-2 { margin-bottom: 16px; }
+.flex { display: flex; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.gap-1 { gap: 8px; }
+.flex-wrap { flex-wrap: wrap; }
+.demo-tag {
+    display: inline-block; padding: 3px 10px;
+    background: rgba(255, 51, 85, 0.1); color: var(--red);
+    border: 1px solid rgba(255, 51, 85, 0.3);
+    border-radius: 20px; font-size: 10px; font-weight: 700;
+    text-transform: uppercase;
+}
+.hero-banner {
+    background: linear-gradient(135deg, var(--accent-glow), var(--accent-2));
+    border-radius: var(--radius); padding: 20px; margin-bottom: 20px;
+    border: 1px solid var(--glass-border);
+}
+.hero-banner h2 { font-size: 20px; margin-bottom: 6px; font-weight: 800; }
+.hero-banner p { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.info-list { list-style: none; padding: 0; }
+.info-list li {
+    padding: 10px 0; border-bottom: 1px solid var(--glass-border);
+    font-size: 13px; color: var(--text-secondary);
+    display: flex; align-items: flex-start; gap: 10px; line-height: 1.6;
+}
+.info-list li:last-child { border-bottom: none; }
+.info-list li strong { color: var(--text-primary); }
+.wd-detail-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 14px; background: var(--bg-dark);
+    border-radius: 8px; margin-bottom: 8px;
+    border-left: 3px solid var(--accent);
+}
+.wd-detail-row .k { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+.wd-detail-row .v { font-size: 14px; color: var(--text-primary); font-weight: 700; }
+.pay-step {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 12px 14px; background: var(--bg-dark);
+    border-radius: 10px; border: 1px solid var(--glass-border);
+    margin-bottom: 8px;
+}
+.pay-step .n {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px; flex-shrink: 0;
+}
+.pay-step .txt { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+.pay-step .txt strong { color: var(--text-primary); }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-demo-bar">⚠ DEMO MODE — NO REAL MONEY • NO REAL PAYMENTS • NO CASH VALUE</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- AUTH -->
+<div class="auth-wrap" id="authScreen">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <span class="icon">🎮</span>
+            <h1>TAKS GAME</h1>
+            <p>Task Money Game • DEMO MODE</p>
+        </div>
+
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchAuthTab('login')" id="tabLogin">LOGIN</button>
+            <button class="auth-tab" onclick="switchAuthTab('register')" id="tabRegister">REGISTER</button>
+        </div>
+
+        <!-- LOGIN -->
+        <form id="loginForm" onsubmit="event.preventDefault(); loginUser();">
+            <div class="form-group">
+                <label>Username / Mobile</label>
+                <input type="text" id="loginUser" placeholder="Enter username or mobile">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPass" placeholder="Enter password">
+            </div>
+            <button type="submit" class="btn btn-primary">🔓 LOGIN</button>
+            <div class="flex-between mt-1">
+                <button type="button" class="link-btn" onclick="forgotPassword()">Forgot Password?</button>
+            </div>
+            <div class="demo-notice">
+                🔐 Demo: <strong>demo</strong> / <strong>demo123</strong>
+            </div>
+        </form>
+
+        <!-- REGISTER -->
+        <form id="registerForm" class="hidden" onsubmit="event.preventDefault(); registerUser();">
+            <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Full name"></div>
+            <div class="form-group"><label>Username</label><input type="text" id="regUser" placeholder="Username"></div>
+            <div class="form-group"><label>Mobile</label><input type="tel" id="regMobile" placeholder="10-digit mobile"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
+            <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Min 6 chars"></div>
+            <div class="form-group"><label>Confirm Password</label><input type="password" id="regPass2" placeholder="Re-enter"></div>
+            <div class="checkbox-row">
+                <input type="checkbox" id="regTerms">
+                <label for="regTerms" style="text-transform:none;cursor:pointer;">I accept DEMO terms — NO real money.</label>
+            </div>
+            <button type="submit" class="btn btn-primary">✨ CREATE DEMO ACCOUNT</button>
+        </form>
+    </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <span class="brand-icon">🎮</span>
+            <div>
+                <div class="brand-text">TAKS GAME</div>
+                <div class="brand-sub">Demo Mode</div>
+            </div>
+        </div>
+        <nav>
+            <div class="nav-item active" data-page="dashboard" onclick="navTo('dashboard')"><span class="nav-icon">📊</span><span>Dashboard</span></div>
+            <div class="nav-item" data-page="tasks" onclick="navTo('tasks')"><span class="nav-icon">✅</span><span>Tasks</span></div>
+            <div class="nav-item" data-page="game" onclick="navTo('game')"><span class="nav-icon">🎯</span><span>Cross Game</span></div>
+            <div class="nav-item" data-page="wallet" onclick="navTo('wallet')"><span class="nav-icon">💰</span><span>Wallet</span></div>
+            <div class="nav-item" data-page="deposit" onclick="navTo('deposit')"><span class="nav-icon">📥</span><span>Demo Deposit</span></div>
+            <div class="nav-item" data-page="withdraw" onclick="navTo('withdraw')"><span class="nav-icon">📤</span><span>Demo Withdrawal</span></div>
+            <div class="nav-item" data-page="realwithdraw" onclick="navTo('realwithdraw')"><span class="nav-icon">💳</span><span>Real Withdrawal</span></div>
+            <div class="nav-item" data-page="bank" onclick="navTo('bank')"><span class="nav-icon">🏦</span><span>Bank Details</span></div>
+            <div class="nav-item" data-page="transactions" onclick="navTo('transactions')"><span class="nav-icon">📜</span><span>Transactions</span></div>
+            <div class="nav-item" data-page="daily" onclick="navTo('daily')"><span class="nav-icon">🎁</span><span>Daily Rewards</span></div>
+            <div class="nav-item" data-page="achievements" onclick="navTo('achievements')"><span class="nav-icon">🏆</span><span>Achievements</span></div>
+            <div class="nav-item" data-page="profile" onclick="navTo('profile')"><span class="nav-icon">👤</span><span>Profile</span></div>
+            <div class="nav-item" data-page="settings" onclick="navTo('settings')"><span class="nav-icon">⚙️</span><span>Settings</span></div>
+            <div class="nav-item" data-page="info" onclick="navTo('info')"><span class="nav-icon">ℹ️</span><span>Game Info</span></div>
+            <div class="nav-item" data-page="admin" onclick="navTo('admin')"><span class="nav-icon">🛡️</span><span>Admin Panel</span></div>
+            <div class="nav-item logout" onclick="logoutUser()"><span class="nav-icon">🚪</span><span>Logout</span></div>
+        </nav>
+    </aside>
+
+    <main class="main" id="mainContent"></main>
+
+    <nav class="mobile-nav">
+        <div class="mob-item active" data-page="dashboard" onclick="navTo('dashboard')"><span class="mob-icon">📊</span>Home</div>
+        <div class="mob-item" data-page="tasks" onclick="navTo('tasks')"><span class="mob-icon">✅</span>Tasks</div>
+        <div class="mob-item" data-page="game" onclick="navTo('game')"><span class="mob-icon">🎯</span>Game</div>
+        <div class="mob-item" data-page="wallet" onclick="navTo('wallet')"><span class="mob-icon">💰</span>Wallet</div>
+        <div class="mob-item" data-page="profile" onclick="navTo('profile')"><span class="mob-icon">👤</span>Profile</div>
+    </nav>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box" id="modalBox"></div>
+</div>
+
+<script>
+/* ============================================================
+   STATE
+   ============================================================ */
+let currentUser = null;
+let userData = null;
+let tasks = [];
+let settings = { notifications: true, sound: true };
+let txFilter = 'all';
+
+let gameState = {
+    running: false, score: 0, lives: 3, crossings: 0,
+    player: { x: 0, y: 0, w: 30, h: 30 },
+    cars: [], coins: [], laneCount: 6, laneHeight: 0,
+    animId: null, lastTime: 0
+};
+
+const LS = {
+    USERS: 'tmg_users',
+    SESSION: 'tmg_session',
+    TASKS: 'tmg_tasks',
+    DATA: 'tmg_data_',
+    SETTINGS: 'tmg_settings'
+};
+
+const STARTING_BALANCE = 500;
+const XP_PER_LEVEL = 100;
+
+const DEFAULT_TASKS = [
+    { id: 't1', icon: '🎬', title: 'Watch Demo Video', desc: 'Watch a short educational video to earn virtual coins.', reward: 20 },
+    { id: 't2', icon: '🧠', title: 'Complete Quiz', desc: 'Answer a quick quiz to test your knowledge.', reward: 30 },
+    { id: 't3', icon: '📖', title: 'Read Learning Article', desc: 'Read a short article about coding.', reward: 15 },
+    { id: 't4', icon: '🎮', title: 'Complete Memory Game', desc: 'Finish a simple memory mini game.', reward: 25 },
+    { id: 't5', icon: '📅', title: 'Daily Login', desc: 'Log in today to receive your daily virtual reward.', reward: 10 },
+    { id: 't6', icon: '❓', title: 'Complete 5 Questions', desc: 'Answer 5 questions correctly to earn coins.', reward: 40 },
+    { id: 't7', icon: '🕹️', title: 'Play Mini Game', desc: 'Play the Cross Task game and earn virtual coins.', reward: 50 }
+];
+
+/* ============================================================
+   STORAGE
+   ============================================================ */
+function loadUsers() {
+    try { return JSON.parse(localStorage.getItem(LS.USERS) || '[]'); }
+    catch (e) { return []; }
+}
+function saveUsers(u) { localStorage.setItem(LS.USERS, JSON.stringify(u)); }
+
+function loadTasks() {
+    try {
+        const t = JSON.parse(localStorage.getItem(LS.TASKS));
+        if (Array.isArray(t) && t.length) return t;
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(DEFAULT_TASKS));
+}
+function saveTasks() { localStorage.setItem(LS.TASKS, JSON.stringify(tasks)); }
+
+function loadSettings() {
+    try {
+        const s = JSON.parse(localStorage.getItem(LS.SETTINGS));
+        if (s && typeof s === 'object') settings = { ...settings, ...s };
+    } catch (e) {}
+}
+function saveSettings() { localStorage.setItem(LS.SETTINGS, JSON.stringify(settings)); }
+
+function loadUserData() {
+    try {
+        const raw = localStorage.getItem(LS.DATA + currentUser.id);
+        if (raw) {
+            const d = JSON.parse(raw);
+            // Ensure all fields exist
+            const fresh = createFreshUserData();
+            return { ...fresh, ...d };
+        }
+    } catch (e) {}
+    return createFreshUserData();
+}
+function saveUserData() {
+    localStorage.setItem(LS.DATA + currentUser.id, JSON.stringify(userData));
+}
+function createFreshUserData() {
+    return {
+        balance: STARTING_BALANCE,
+        totalRewards: 0,
+        spent: 0,
+        completedTasks: [],
+        lastDailyClaim: null,
+        claimedRewards: [],
+        xp: 0,
+        level: 1,
+        transactions: [
+            { id: uid(), date: Date.now(), type: 'DEMO REWARD', amount: STARTING_BALANCE, status: 'COMPLETED', desc: 'Welcome bonus (virtual)' }
+        ],
+        bankDetails: { holder: '', bank: '', account: '', ifsc: '' },
+        highScore: 0,
+        achievements: [],
+        totalTasksCompleted: 0,
+        coinsCollected: 0,
+        totalCrossings: 0,
+        gamesPlayed: 0
+    };
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function escapeHtml(s) {
+    return String(s || '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+}
+function fmt(n) { return '₹' + Number(n).toLocaleString('en-IN'); }
+function fmtDate(ts) {
+    const d = new Date(ts);
+    return String(d.getDate()).padStart(2, '0') + '/' +
+           String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+}
+function fmtTime(ts) {
+    return new Date(ts).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+}
+function todayStr() { return new Date().toISOString().slice(0, 10); }
+
+/* ============================================================
+   TOAST & MODAL
+   ============================================================ */
+function showToast(msg, type = 'info') {
+    if (!settings.notifications && type !== 'error') return;
+    const wrap = document.getElementById('toastWrap');
+    const toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+    const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+    toast.innerHTML = `<span>${icons[type] || icons.info}</span><span>${msg}</span>`;
+    wrap.appendChild(toast);
+    setTimeout(() => {
+        toast.style.animation = 'toastOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3200);
+}
+
+function showModal(html) {
+    document.getElementById('modalBox').innerHTML = html;
+    document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+}
+
+/* ============================================================
+   AUTH
+   ============================================================ */
+function switchAuthTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+    document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+}
+
+function loginUser() {
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value;
+    if (!u || !p) { showToast('Enter username & password', 'error'); return; }
+
+    const users = loadUsers();
+    // Auto-create demo user
+    if (users.length === 0 && u === 'demo' && p === 'demo123') {
+        users.push({
+            id: uid(), name: 'Demo User', username: 'demo',
+            mobile: '7906108169', email: 'demo@demo.local',
+            password: 'demo123', created: Date.now()
+        });
+        saveUsers(users);
+    }
+
+    const user = users.find(x =>
+        x.username.toLowerCase() === u.toLowerCase() || x.mobile === u
+    );
+    if (!user) { showToast('Account not found. Try demo / demo123', 'error'); return; }
+    if (user.password !== p) { showToast('Incorrect password', 'error'); return; }
+
+    currentUser = user;
+    localStorage.setItem(LS.SESSION, JSON.stringify({ id: user.id }));
+    userData = loadUserData();
+    saveUserData();
+    tasks = loadTasks();
+    loadSettings();
+    showToast(`Welcome back, ${user.name}!`, 'success');
+    enterApp();
+}
+
+function registerUser() {
+    const name = document.getElementById('regName').value.trim();
+    const username = document.getElementById('regUser').value.trim();
+    const mobile = document.getElementById('regMobile').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const pass = document.getElementById('regPass').value;
+    const pass2 = document.getElementById('regPass2').value;
+    const terms = document.getElementById('regTerms').checked;
+
+    if (!name || !username || !mobile || !email || !pass) { showToast('Fill all fields', 'error'); return; }
+    if (username.length < 3) { showToast('Username min 3 chars', 'error'); return; }
+    if (!/^[0-9]{10}$/.test(mobile)) { showToast('Mobile must be 10 digits', 'error'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Invalid email', 'error'); return; }
+    if (pass.length < 6) { showToast('Password min 6 chars', 'error'); return; }
+    if (pass !== pass2) { showToast('Passwords do not match', 'error'); return; }
+    if (!terms) { showToast('Accept DEMO terms', 'warning'); return; }
+
+    const users = loadUsers();
+    if (users.some(x => x.username.toLowerCase() === username.toLowerCase())) { showToast('Username taken', 'error'); return; }
+    if (users.some(x => x.mobile === mobile)) { showToast('Mobile registered', 'error'); return; }
+
+    const newUser = { id: uid(), name, username, mobile, email, password: pass, created: Date.now() };
+    users.push(newUser);
+    saveUsers(users);
+
+    currentUser = newUser;
+    localStorage.setItem(LS.SESSION, JSON.stringify({ id: newUser.id }));
+    userData = createFreshUserData();
+    saveUserData();
+    tasks = loadTasks();
+    loadSettings();
+    showToast('Demo account created!', 'success');
+    enterApp();
+}
+
+function forgotPassword() {
+    showModal(`
+        <h3>🔑 Forgot Password</h3>
+        <p>Demo password reset not available.</p>
+        <p>Please use <strong>demo</strong> / <strong>demo123</strong></p>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="closeModal()">OK</button>
+        </div>
+    `);
+}
+
+function logoutUser() {
+    showModal(`
+        <h3>🚪 Logout</h3>
+        <p>Logout from your demo account?</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-danger" onclick="confirmLogout()">Logout</button>
+        </div>
+    `);
+}
+function confirmLogout() {
+    closeModal();
+    localStorage.removeItem(LS.SESSION);
+    currentUser = null; userData = null;
+    document.getElementById('app').classList.remove('active');
+    document.getElementById('authScreen').style.display = 'flex';
+    document.getElementById('loginForm').reset();
+    document.getElementById('registerForm').reset();
+    switchAuthTab('login');
+    showToast('Logged out', 'info');
+}
+
+function checkSession() {
+    try {
+        const s = JSON.parse(localStorage.getItem(LS.SESSION) || 'null');
+        if (s && s.id) {
+            const users = loadUsers();
+            const user = users.find(x => x.id === s.id);
+            if (user) {
+                currentUser = user;
+                userData = loadUserData();
+                tasks = loadTasks();
+                loadSettings();
+                enterApp();
+                return;
+            }
+        }
+    } catch (e) {}
+    document.getElementById('authScreen').style.display = 'flex';
+}
+
+function enterApp() {
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('app').classList.add('active');
+    navTo('dashboard');
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function navTo(page) {
+    document.querySelectorAll('.nav-item').forEach(x => x.classList.toggle('active', x.dataset.page === page));
+    document.querySelectorAll('.mob-item').forEach(x => x.classList.toggle('active', x.dataset.page === page));
+    document.getElementById('sidebar').classList.remove('open');
+
+    const main = document.getElementById('mainContent');
+    main.style.animation = 'none';
+    void main.offsetWidth;
+    main.style.animation = 'fadeUp 0.35s ease';
+
+    switch (page) {
+        case 'dashboard': renderDashboard(); break;
+        case 'tasks': renderTasks(); break;
+        case 'game': renderGame(); break;
+        case 'wallet': renderWallet(); break;
+        case 'deposit': renderDeposit(); break;
+        case 'withdraw': renderWithdraw(); break;
+        case 'realwithdraw': renderRealWithdraw(); break;
+        case 'bank': renderBank(); break;
+        case 'transactions': renderTransactions(); break;
+        case 'daily': renderDaily(); break;
+        case 'achievements': renderAchievements(); break;
+        case 'profile': renderProfile(); break;
+        case 'settings': renderSettings(); break;
+        case 'info': renderInfo(); break;
+        case 'admin': renderAdmin(); break;
+        default: renderDashboard();
+    }
+}
+
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+/* ============================================================
+   HELPERS - TRANSACTIONS & XP
+   ============================================================ */
+function addTransaction(type, amount, status, desc) {
+    userData.transactions.unshift({
+        id: uid(), date: Date.now(), type, amount, status, desc
+    });
+    if (userData.transactions.length > 200) userData.transactions = userData.transactions.slice(0, 200);
+    saveUserData();
+}
+
+function addXP(amount) {
+    userData.xp += amount;
+    let leveledUp = false;
+    while (userData.xp >= XP_PER_LEVEL) {
+        userData.xp -= XP_PER_LEVEL;
+        userData.level++;
+        leveledUp = true;
+    }
+    if (leveledUp) showToast(`🎉 Level Up! Level ${userData.level}`, 'success');
+    saveUserData();
+}
+
+function levelProgress() { return (userData.xp / XP_PER_LEVEL) * 100; }
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard() {
+    const main = document.getElementById('mainContent');
+    const today = todayStr();
+    const todayTxs = userData.transactions.filter(t =>
+        t.type === 'DEMO REWARD' && new Date(t.date).toISOString().slice(0, 10) === today
+    );
+    const todayReward = todayTxs.reduce((s, t) => s + t.amount, 0);
+
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">👋 Welcome, ${escapeHtml(currentUser.name)}</div>
+                <div class="page-subtitle">
+                    <span class="demo-tag">DEMO</span> Virtual balance • No cash value
+                </div>
+            </div>
+            <div class="balance-chip">
+                <span>💰</span>
+                <span class="amt">${fmt(userData.balance)}</span>
+            </div>
+        </div>
+
+        <div class="hero-banner">
+            <h2>🚀 Start Earning Virtual Coins!</h2>
+            <p>Complete tasks to earn virtual DEMO coins.</p>
+            <div class="flex gap-1 mt-2 flex-wrap">
+                <button class="btn btn-primary" style="width:auto;" onclick="navTo('tasks')">✅ Start Tasks</button>
+                <button class="btn btn-ghost" style="width:auto;" onclick="navTo('game')">🎯 Play Game</button>
+                <button class="btn btn-ghost" style="width:auto;" onclick="navTo('daily')">🎁 Daily Reward</button>
+            </div>
+        </div>
+
+        <div class="grid grid-4 mb-2">
+            <div class="card stat-card">
+                <span class="stat-icon">💰</span>
+                <span class="stat-label">Demo Balance</span>
+                <span class="stat-value gold">${fmt(userData.balance)}</span>
+                <span class="demo-tag" style="align-self:flex-start;">No cash value</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">🎁</span>
+                <span class="stat-label">Today's Reward</span>
+                <span class="stat-value green">${fmt(todayReward)}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">✅</span>
+                <span class="stat-label">Tasks Completed</span>
+                <span class="stat-value accent">${userData.totalTasksCompleted}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">🏆</span>
+                <span class="stat-label">Total Rewards</span>
+                <span class="stat-value">${fmt(userData.totalRewards)}</span>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card card-static">
+                <div class="flex-between mb-1">
+                    <strong>📈 Level ${userData.level}</strong>
+                    <span class="text-muted" style="font-size:12px;">${userData.xp} / ${XP_PER_LEVEL} XP</span>
+                </div>
+                <div class="progress"><div class="progress-fill" style="width:${levelProgress()}%"></div></div>
+            </div>
+            <div class="card card-static">
+                <div class="flex-between mb-1">
+                    <strong>📅 Task Progress</strong>
+                    <span class="text-muted" style="font-size:12px;">${userData.completedTasks.length} / ${tasks.length}</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-fill" style="width:${tasks.length ? (userData.completedTasks.length / tasks.length) * 100 : 0}%"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-static mt-2">
+            <div class="flex-between mb-2">
+                <strong>📜 Recent Activity</strong>
+                <button class="link-btn" onclick="navTo('transactions')">View All →</button>
+            </div>
+            ${userData.transactions.slice(0, 5).map(t => `
+                <div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--glass-border);font-size:12px;">
+                    <div>
+                        <div style="font-weight:600;">${escapeHtml(t.type)}</div>
+                        <div class="text-muted" style="font-size:10px;">${fmtDate(t.date)} • ${escapeHtml(t.desc)}</div>
+                    </div>
+                    <div class="${t.amount >= 0 ? 'amt-pos' : 'amt-neg'}">${t.amount >= 0 ? '+' : ''}${fmt(Math.abs(t.amount))}</div>
+                </div>
+            `).join('') || '<p class="text-muted" style="font-size:12px;">No activity yet</p>'}
+        </div>
+    `;
+}
+
+/* ============================================================
+   TASKS - FULLY WORKING
+   ============================================================ */
+function renderTasks() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">✅ Tasks</div>
+                <div class="page-subtitle">Complete tasks to earn virtual DEMO coins</div>
+            </div>
+            <div class="balance-chip">
+                <span>💰</span>
+                <span class="amt">${fmt(userData.balance)}</span>
+            </div>
+        </div>
+
+        <div class="card card-static mb-2" style="background:rgba(255,215,0,0.06);border-color:rgba(255,215,0,0.2);">
+            <span style="font-size:12px;color:var(--gold);">
+                💡 Click <strong>START TASK</strong> to open the task. Complete it to earn virtual DEMO coins. One-time tasks cannot be repeated.
+            </span>
+        </div>
+
+        <div class="grid grid-2">
+            ${tasks.map(t => {
+                const done = userData.completedTasks.includes(t.id);
+                return `
+                    <div class="task-card ${done ? 'completed' : ''}">
+                        <div class="task-icon">${t.icon || '📌'}</div>
+                        <div class="task-body">
+                            <div class="task-title">${escapeHtml(t.title)}</div>
+                            <div class="task-desc">${escapeHtml(t.desc)}</div>
+                            <span class="task-reward">+${fmt(t.reward)} DEMO</span>
+                            <div>
+                                <button class="task-btn ${done ? 'done' : ''}"
+                                    ${done ? 'disabled' : ''}
+                                    onclick="openTaskModal('${t.id}')">
+                                    ${done ? '✓ COMPLETED' : '▶ START TASK'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+
+        <div class="demo-notice mt-2" style="text-align:center;background:rgba(255,51,85,0.08);border-color:rgba(255,51,85,0.25);color:var(--red);">
+            ⚠ All rewards are VIRTUAL — NO CASH VALUE
+        </div>
+    `;
+}
+
+/* Open task modal */
+function openTaskModal(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) { showToast('Task not found', 'error'); return; }
+    if (userData.completedTasks.includes(taskId)) {
+        showToast('Already completed', 'warning');
+        return;
+    }
+
+    showModal(`
+        <h3>${task.icon || '📌'} ${escapeHtml(task.title)}</h3>
+        <p>${escapeHtml(task.desc)}</p>
+        <div style="background:var(--bg-dark);border-radius:10px;padding:14px;margin:12px 0;text-align:center;">
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:700;margin-bottom:4px;">Reward</div>
+            <div style="font-size:24px;font-weight:800;color:var(--gold);">+${fmt(task.reward)} DEMO</div>
+        </div>
+        <p class="text-muted" style="font-size:11px;text-align:center;">⚠ This is a simulation. No real money is involved.</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="completeTask('${task.id}')">✅ Complete & Claim</button>
+        </div>
+    `);
+}
+
+/* Complete the task - CORE FUNCTION */
+function completeTask(taskId) {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) { closeModal(); return; }
+    if (userData.completedTasks.includes(taskId)) {
+        showToast('Already completed', 'warning');
+        closeModal();
+        return;
+    }
+
+    // Add reward
+    userData.completedTasks.push(taskId);
+    userData.balance += task.reward;
+    userData.totalRewards += task.reward;
+    userData.totalTasksCompleted += 1;
+
+    // Add transaction
+    addTransaction('DEMO REWARD', task.reward, 'COMPLETED', task.title);
+
+    // Add XP
+    addXP(10);
+
+    // Check achievements
+    checkAchievements();
+
+    // Save everything
+    saveUserData();
+
+    // Close modal
+    closeModal();
+
+    // Show success
+    showToast(`✅ Task Complete! +${fmt(task.reward)} DEMO credited`, 'success');
+
+    // Re-render tasks page
+    renderTasks();
+}
+
+/* ============================================================
+   ACHIEVEMENTS
+   ============================================================ */
+const ACHIEVEMENTS = [
+    { id: 'first_task', icon: '🌱', title: 'First Task', desc: 'Complete your first task' },
+    { id: 'ten_tasks', icon: '📚', title: '10 Tasks', desc: 'Complete 10 tasks' },
+    { id: 'fifty_tasks', icon: '🏅', title: '50 Tasks', desc: 'Complete 50 tasks' },
+    { id: 'coin_collector', icon: '🪙', title: 'Coin Collector', desc: 'Collect 20 coins in the game' },
+    { id: 'road_runner', icon: '🏃', title: 'Road Runner', desc: 'Complete 10 crossings' },
+    { id: 'level_5', icon: '⭐', title: 'Level 5', desc: 'Reach level 5' },
+    { id: 'champion', icon: '🏆', title: 'Champion', desc: 'Reach level 10' },
+    { id: 'high_score', icon: '🎯', title: 'High Score', desc: 'Score 200+ points' }
+];
+
+function checkAchievements() {
+    const check = (id, cond) => {
+        if (cond && !userData.achievements.includes(id)) {
+            userData.achievements.push(id);
+            const a = ACHIEVEMENTS.find(x => x.id === id);
+            if (a) showToast(`🏆 Unlocked: ${a.title}`, 'success');
+        }
+    };
+    check('first_task', userData.totalTasksCompleted >= 1);
+    check('ten_tasks', userData.totalTasksCompleted >= 10);
+    check('fifty_tasks', userData.totalTasksCompleted >= 50);
+    check('coin_collector', (userData.coinsCollected || 0) >= 20);
+    check('road_runner', (userData.totalCrossings || 0) >= 10);
+    check('level_5', userData.level >= 5);
+    check('champion', userData.level >= 10);
+    check('high_score', (userData.highScore || 0) >= 200);
+    saveUserData();
+}
+
+function renderAchievements() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">🏆 Achievements</div>
+                <div class="page-subtitle">${userData.achievements.length} / ${ACHIEVEMENTS.length} unlocked</div>
+            </div>
+        </div>
+        <div class="grid grid-2">
+            ${ACHIEVEMENTS.map(a => {
+                const unlocked = userData.achievements.includes(a.id);
+                return `
+                    <div class="ach-card ${unlocked ? 'unlocked' : ''}">
+                        <div class="ach-icon">${a.icon}</div>
+                        <div>
+                            <div class="ach-title">${a.title}</div>
+                            <div class="ach-desc">${a.desc}</div>
+                        </div>
+                        <div class="ach-status">${unlocked ? '✓ UNLOCKED' : '🔒 LOCKED'}</div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+/* ============================================================
+   CROSS GAME
+   ============================================================ */
+function renderGame() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">🎯 Cross Task Game</div>
+                <div class="page-subtitle">Cross roads, avoid cars, collect coins!</div>
+            </div>
+            <div class="balance-chip">
+                <span>🏆 High:</span>
+                <span class="amt">${userData.highScore}</span>
+            </div>
+        </div>
+
+        <div class="card card-static mb-2" style="background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.2);">
+            <span style="font-size:12px;color:var(--accent);">
+                🎮 Use <strong>Arrow Keys</strong> or <strong>WASD</strong> on desktop. Crossing = +25 pts. Coin = +10 pts.
+            </span>
+        </div>
+
+        <div class="game-wrap">
+            <div class="game-hud">
+                <div class="hud-item">🎯 Score: <span class="val" id="gScore">0</span></div>
+                <div class="hud-item">❤️ Lives: <span class="val red" id="gLives">3</span></div>
+                <div class="hud-item">🏁 Crossings: <span class="val green" id="gCross">0</span></div>
+                <div class="hud-item">🏆 High: <span class="val gold" id="gHigh">${userData.highScore}</span></div>
+            </div>
+            <canvas id="gameCanvas" width="700" height="480"></canvas>
+            <div class="flex gap-1 mt-2" style="justify-content:center;">
+                <button class="btn btn-primary" style="width:auto;" id="gStartBtn" onclick="startGame()">▶ Start Game</button>
+                <button class="btn btn-ghost" style="width:auto;" onclick="resetGame()">🔄 Reset</button>
+            </div>
+            <div class="mobile-controls">
+                <button class="dpad-btn up" onclick="movePlayer('up')">▲</button>
+                <button class="dpad-btn left" onclick="movePlayer('left')">◀</button>
+                <button class="dpad-btn down" onclick="movePlayer('down')">▼</button>
+                <button class="dpad-btn right" onclick="movePlayer('right')">▶</button>
+            </div>
+        </div>
+    `;
+    initGameCanvas();
+}
+
+function initGameCanvas() {
+    const canvas = document.getElementById('gameCanvas');
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+    const maxW = Math.min(700, parent.clientWidth - 32);
+    const scale = maxW / 700;
+    canvas.style.width = maxW + 'px';
+    canvas.style.height = (480 * scale) + 'px';
+    canvas.width = 700;
+    canvas.height = 480;
+    gameState.laneHeight = 480 / (gameState.laneCount + 1);
+    gameState.player.x = 350 - 15;
+    gameState.player.y = 480 - gameState.laneHeight / 2 - 15;
+    drawGame();
+}
+
+function startGame() {
+    if (gameState.running) return;
+    gameState.running = true;
+    gameState.score = 0;
+    gameState.lives = 3;
+    gameState.crossings = 0;
+    gameState.cars = [];
+    gameState.coins = [];
+    gameState.lastTime = performance.now();
+    userData.gamesPlayed++;
+    saveUserData();
+
+    gameState.player.x = 350 - 15;
+    gameState.player.y = 480 - gameState.laneHeight / 2 - 15;
+
+    for (let i = 1; i <= gameState.laneCount; i++) {
+        const laneY = i * gameState.laneHeight - gameState.laneHeight / 2;
+        const dir = i % 2 === 0 ? 1 : -1;
+        const carCount = 1 + Math.floor(Math.random() * 2);
+        for (let j = 0; j < carCount; j++) {
+            gameState.cars.push({
+                lane: i, x: Math.random() * 700, y: laneY - 15,
+                w: 50 + Math.random() * 20, h: 30,
+                speed: (1.5 + Math.random() * 2) * dir,
+                color: ['#ff3355', '#ffd700', '#00ff88', '#8b5cf6', '#00d4ff'][Math.floor(Math.random() * 5)]
+            });
+        }
+    }
+
+    for (let i = 0; i < 6; i++) {
+        gameState.coins.push({
+            x: 40 + Math.random() * 620,
+            y: gameState.laneHeight / 2 + Math.random() * (480 - gameState.laneHeight),
+            r: 10, collected: false, wobble: Math.random() * Math.PI * 2
+        });
+    }
+
+    document.getElementById('gStartBtn').disabled = true;
+    document.getElementById('gStartBtn').textContent = '▶ Playing...';
+    gameState.animId = requestAnimationFrame(gameLoop);
+}
+
+function gameLoop(t) {
+    if (!gameState.running) return;
+    const dt = Math.min(50, t - gameState.lastTime) / 16.67;
+    gameState.lastTime = t;
+
+    gameState.cars.forEach(c => {
+        c.x += c.speed * dt;
+        if (c.speed > 0 && c.x > 700) c.x = -c.w;
+        if (c.speed < 0 && c.x < -c.w) c.x = 700;
+    });
+
+    const p = gameState.player;
+    for (const c of gameState.cars) {
+        if (p.x < c.x + c.w && p.x + p.w > c.x && p.y < c.y + c.h && p.y + p.h > c.y) {
+            gameState.lives--;
+            p.x = 350 - 15;
+            p.y = 480 - gameState.laneHeight / 2 - 15;
+            showToast('💥 Hit! -1 life', 'error');
+            if (gameState.lives <= 0) { gameOver(); return; }
+            break;
+        }
+    }
+
+    gameState.coins.forEach(c => {
+        if (c.collected) return;
+        const dx = (p.x + p.w / 2) - c.x;
+        const dy = (p.y + p.h / 2) - c.y;
+        if (Math.sqrt(dx * dx + dy * dy) < c.r + 15) {
+            c.collected = true;
+            gameState.score += 10;
+            userData.coinsCollected = (userData.coinsCollected || 0) + 1;
+            addXP(2);
+            showToast('🪙 Coin +10 pts', 'success');
+        }
+    });
+
+    if (p.y < gameState.laneHeight * 0.5) {
+        gameState.crossings++;
+        gameState.score += 25;
+        userData.totalCrossings = (userData.totalCrossings || 0) + 1;
+        addXP(5);
+        p.x = 350 - 15;
+        p.y = 480 - gameState.laneHeight / 2 - 15;
+        gameState.coins.push({
+            x: 40 + Math.random() * 620,
+            y: gameState.laneHeight / 2 + Math.random() * (480 - gameState.laneHeight),
+            r: 10, collected: false, wobble: Math.random() * Math.PI * 2
+        });
+        if (gameState.coins.length > 20) gameState.coins.shift();
+        showToast('🏁 Crossing! +25 pts', 'success');
+    }
+
+    document.getElementById('gScore').textContent = gameState.score;
+    document.getElementById('gLives').textContent = gameState.lives;
+    document.getElementById('gCross').textContent = gameState.crossings;
+
+    drawGame();
+    gameState.animId = requestAnimationFrame(gameLoop);
+}
+
+function drawGame() {
+    const canvas = document.getElementById('gameCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = 700, H = 480, lh = gameState.laneHeight;
+
+    ctx.fillStyle = '#0a0e1a';
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = 'rgba(0, 255, 136, 0.08)';
+    ctx.fillRect(0, 0, W, lh * 0.5);
+    ctx.fillStyle = '#00ff88';
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('🏁 GOAL — REACH HERE', W / 2, lh * 0.32);
+
+    for (let i = 1; i <= gameState.laneCount; i++) {
+        const laneY = i * lh;
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+        ctx.setLineDash([12, 12]);
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, laneY);
+        ctx.lineTo(W, laneY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    ctx.fillStyle = 'rgba(255, 215, 0, 0.06)';
+    ctx.fillRect(0, lh * gameState.laneCount, W, lh);
+
+    gameState.coins.forEach(c => {
+        if (c.collected) return;
+        c.wobble += 0.1;
+        const oy = Math.sin(c.wobble) * 3;
+        const grd = ctx.createRadialGradient(c.x, c.y + oy, 0, c.x, c.y + oy, c.r * 2.5);
+        grd.addColorStop(0, 'rgba(255, 215, 0, 0.5)');
+        grd.addColorStop(1, 'rgba(255, 215, 0, 0)');
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.arc(c.x, c.y + oy, c.r * 2.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#ffd700';
+        ctx.beginPath();
+        ctx.arc(c.x, c.y + oy, c.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#b8860b';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('$', c.x, c.y + oy + 1);
+    });
+
+    gameState.cars.forEach(c => {
+        ctx.fillStyle = c.color;
+        roundRect(ctx, c.x, c.y, c.w, c.h, 6);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+        ctx.fillRect(c.x + 8, c.y + 5, c.w - 16, 8);
+        ctx.fillStyle = '#000';
+        ctx.beginPath();
+        ctx.arc(c.x + 10, c.y + c.h, 4, 0, Math.PI * 2);
+        ctx.arc(c.x + c.w - 10, c.y + c.h, 4, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    const p = gameState.player;
+    const grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 0, p.x + p.w / 2, p.y + p.h / 2, 25);
+    grd.addColorStop(0, 'rgba(0, 212, 255, 0.4)');
+    grd.addColorStop(1, 'rgba(0, 212, 255, 0)');
+    ctx.fillStyle = grd;
+    ctx.fillRect(p.x - 15, p.y - 15, p.w + 30, p.h + 30);
+    ctx.fillStyle = '#00d4ff';
+    roundRect(ctx, p.x, p.y, p.w, p.h, 6);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.arc(p.x + p.w / 2, p.y + p.h / 2, 6, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#0a0e1a';
+    ctx.beginPath();
+    ctx.arc(p.x + p.w / 2 - 3, p.y + p.h / 2 - 1, 1.5, 0, Math.PI * 2);
+    ctx.arc(p.x + p.w / 2 + 3, p.y + p.h / 2 - 1, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    if (!gameState.running && gameState.lives <= 0) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#ff3355';
+        ctx.font = 'bold 42px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('GAME OVER', W / 2, H / 2 - 30);
+        ctx.fillStyle = '#fff';
+        ctx.font = '18px sans-serif';
+        ctx.fillText('Score: ' + gameState.score, W / 2, H / 2 + 20);
+        ctx.fillText('Crossings: ' + gameState.crossings, W / 2, H / 2 + 50);
+    }
+
+    if (!gameState.running && gameState.lives > 0 && gameState.score === 0) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.fillRect(0, 0, W, H);
+        ctx.fillStyle = '#00d4ff';
+        ctx.font = 'bold 24px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('Press START GAME', W / 2, H / 2);
+    }
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+}
+
+function movePlayer(dir) {
+    if (!gameState.running) return;
+    const p = gameState.player;
+    const step = gameState.laneHeight * 0.55;
+    if (dir === 'up') p.y = Math.max(0, p.y - step);
+    if (dir === 'down') p.y = Math.min(480 - p.h, p.y + step);
+    if (dir === 'left') p.x = Math.max(0, p.x - step);
+    if (dir === 'right') p.x = Math.min(700 - p.w, p.x + step);
+}
+
+function gameOver() {
+    gameState.running = false;
+    cancelAnimationFrame(gameState.animId);
+    const btn = document.getElementById('gStartBtn');
+    if (btn) { btn.disabled = false; btn.textContent = '▶ Play Again'; }
+
+    if (gameState.score > userData.highScore) {
+        userData.highScore = gameState.score;
+        saveUserData();
+        showToast(`🏆 New high score: ${gameState.score}!`, 'success');
+    }
+
+    if (gameState.score >= 100) {
+        userData.balance += 50;
+        userData.totalRewards += 50;
+        addTransaction('DEMO REWARD', 50, 'COMPLETED', 'Cross Game score ' + gameState.score);
+        showToast('+₹50 DEMO REWARD (no cash value)', 'success');
+        saveUserData();
+    }
+
+    checkAchievements();
+    drawGame();
+    const gHigh = document.getElementById('gHigh');
+    if (gHigh) gHigh.textContent = userData.highScore;
+}
+
+function resetGame() {
+    gameState.running = false;
+    cancelAnimationFrame(gameState.animId);
+    gameState.score = 0;
+    gameState.lives = 3;
+    gameState.crossings = 0;
+    gameState.cars = [];
+    gameState.coins = [];
+    gameState.player.x = 350 - 15;
+    gameState.player.y = 480 - gameState.laneHeight / 2 - 15;
+    const btn = document.getElementById('gStartBtn');
+    if (btn) { btn.disabled = false; btn.textContent = '▶ Start Game'; }
+    document.getElementById('gScore').textContent = '0';
+    document.getElementById('gLives').textContent = '3';
+    document.getElementById('gCross').textContent = '0';
+    drawGame();
+}
+
+/* ============================================================
+   WALLET
+   ============================================================ */
+function renderWallet() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">💰 Demo Wallet</div>
+                <div class="page-subtitle">Virtual balance only — no cash value</div>
+            </div>
+            <span class="demo-tag">DEMO ONLY</span>
+        </div>
+
+        <div class="grid grid-3 mb-2">
+            <div class="card stat-card">
+                <span class="stat-icon">💵</span>
+                <span class="stat-label">Available Demo Balance</span>
+                <span class="stat-value gold">${fmt(userData.balance)}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">🏆</span>
+                <span class="stat-label">Total Demo Rewards</span>
+                <span class="stat-value green">${fmt(userData.totalRewards)}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">📤</span>
+                <span class="stat-label">Demo Amount Spent</span>
+                <span class="stat-value red">${fmt(userData.spent)}</span>
+            </div>
+        </div>
+
+        <div class="card card-static">
+            <div class="flex gap-1 flex-wrap">
+                <button class="btn btn-primary" style="width:auto;" onclick="navTo('deposit')">📥 Demo Add Balance</button>
+                <button class="btn btn-ghost" style="width:auto;" onclick="navTo('withdraw')">📤 Demo Withdrawal</button>
+                <button class="btn btn-ghost" style="width:auto;" onclick="navTo('realwithdraw')">💳 Real Withdrawal</button>
+                <button class="btn btn-ghost" style="width:auto;" onclick="navTo('transactions')">📜 Transactions</button>
+            </div>
+        </div>
+
+        <div class="demo-notice mt-2" style="text-align:center;background:rgba(255,51,85,0.08);border-color:rgba(255,51,85,0.25);color:var(--red);">
+            ⚠ DEMO BALANCE — NO CASH VALUE
+        </div>
+    `;
+}
+
+/* ============================================================
+   DEPOSIT with QR CODES
+   ============================================================ */
+function renderDeposit() {
+    const main = document.getElementById('mainContent');
+    const amounts = [50, 100, 250, 500, 1000];
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">📥 Demo Deposit</div>
+                <div class="page-subtitle">Scan QR or select amount</div>
+            </div>
+            <span class="demo-tag">DEMO ONLY</span>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card card-static">
+                <h3 style="font-size:16px;margin-bottom:12px;">🎯 Select Demo Amount</h3>
+                <div class="amount-grid" id="depositAmounts">
+                    ${amounts.map(a => `<button class="amount-btn" data-amount="${a}" onclick="selectDeposit(${a}, this)">₹${a}</button>`).join('')}
+                </div>
+                <button class="btn btn-primary" style="width:100%;" onclick="simulateDeposit()">💳 SIMULATE DEMO CREDIT</button>
+                <div class="demo-notice mt-2" style="text-align:center;">
+                    This is a simulation. No real payment was made.
+                </div>
+
+                <h3 style="font-size:14px;margin-top:24px;margin-bottom:12px;color:var(--accent);">📋 How to use</h3>
+                <div class="pay-step">
+                    <div class="n">1</div>
+                    <div class="txt"><strong>Save</strong> the QR code from the right side.</div>
+                </div>
+                <div class="pay-step">
+                    <div class="n">2</div>
+                    <div class="txt"><strong>Click</strong> the QR to enlarge and download.</div>
+                </div>
+                <div class="pay-step">
+                    <div class="n">3</div>
+                    <div class="txt"><strong>Simulate</strong> ₹500 DEMO credit to add virtual balance.</div>
+                </div>
+            </div>
+
+            <div class="card card-static" style="text-align:center;">
+                <h3 style="font-size:16px;margin-bottom:12px;">📱 DEMO QR PAYMENT</h3>
+                <div class="qr-container">
+                    <div class="qr-box" onclick="openQRModal()" style="cursor:pointer;" title="Click to enlarge">
+                        <canvas id="qrCanvas1" width="240" height="240"></canvas>
+                    </div>
+                    <div class="qr-label">DEMO QR ONLY</div>
+
+                    <div class="flex gap-1" style="width:100%;">
+                        <button class="btn btn-ghost" onclick="downloadQR('qrCanvas1')" style="flex:1;padding:8px;font-size:12px;">⬇️ Download</button>
+                        <button class="btn btn-ghost" onclick="openQRModal()" style="flex:1;padding:8px;font-size:12px;">🔍 Enlarge</button>
+                    </div>
+
+                    <button class="btn btn-primary" style="width:100%;" onclick="simulateQRDeposit()">📷 SIMULATE ₹500 DEMO</button>
+
+                    <div class="qr-warning" style="width:100%;">
+                        ⚠ Scanning this visual does not make a real payment.<br>
+                        Demo Contact: <strong>7906108169</strong> – NOT A PAYMENT NUMBER.
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    setTimeout(() => {
+        const c1 = document.getElementById('qrCanvas1');
+        if (c1) generateQR(c1, 12345, 240);
+    }, 50);
+}
+
+/* Pure JavaScript QR Generator */
+function generateQR(canvas, seed, size) {
+    const modules = 25;
+    const cell = Math.floor(size / modules);
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+
+    let seedState = seed;
+    function rand() {
+        seedState = (seedState * 9301 + 49297) % 233280;
+        return seedState / 233280;
+    }
+
+    function setCell(x, y, dark) {
+        if (x < 0 || y < 0 || x >= modules || y >= modules) return;
+        ctx.fillStyle = dark ? '#000000' : '#ffffff';
+        ctx.fillRect(x * cell, y * cell, cell, cell);
+    }
+
+    // Clear all
+    for (let y = 0; y < modules; y++)
+        for (let x = 0; x < modules; x++)
+            setCell(x, y, false);
+
+    // Finder patterns (top-left, top-right, bottom-left)
+    function finder(sx, sy) {
+        for (let y = 0; y < 7; y++) {
+            for (let x = 0; x < 7; x++) {
+                const edge = x === 0 || y === 0 || x === 6 || y === 6;
+                const center = x >= 2 && x <= 4 && y >= 2 && y <= 4;
+                setCell(sx + x, sy + y, edge || center);
+            }
+        }
+    }
+    finder(0, 0);
+    finder(modules - 7, 0);
+    finder(0, modules - 7);
+
+    // Alignment pattern
+    const alignPos = modules - 9;
+    for (let y = 0; y < 5; y++) {
+        for (let x = 0; x < 5; x++) {
+            const edge = x === 0 || y === 0 || x === 4 || y === 4;
+            const center = x === 2 && y === 2;
+            setCell(alignPos + x, alignPos + y, edge || center);
+        }
+    }
+
+    // Timing patterns
+    for (let i = 8; i < modules - 8; i++) {
+        setCell(i, 6, i % 2 === 0);
+        setCell(6, i, i % 2 === 0);
+    }
+
+    // Data modules
+    for (let y = 0; y < modules; y++) {
+        for (let x = 0; x < modules; x++) {
+            if (x < 8 && y < 8) continue;
+            if (x >= modules - 8 && y < 8) continue;
+            if (x < 8 && y >= modules - 8) continue;
+            if (x >= alignPos && x < alignPos + 5 && y >= alignPos && y < alignPos + 5) continue;
+            if (y === 6 || x === 6) continue;
+            setCell(x, y, rand() > 0.5);
+        }
+    }
+}
+
+function openQRModal() {
+    showModal(`
+        <h3 style="text-align:center;">📱 DEMO QR PAYMENT</h3>
+        <p style="text-align:center;font-size:12px;">Visual only — NOT a real payment QR</p>
+        <div class="qr-container">
+            <div class="qr-box">
+                <canvas id="qrModalCanvas" width="280" height="280"></canvas>
+            </div>
+            <div class="qr-label">DEMO QR ONLY</div>
+            <div class="qr-warning" style="width:100%;">
+                ⚠ This is a visual only. NOT a real payment QR.<br>
+                Demo Contact: <strong>7906108169</strong> – NOT A PAYMENT NUMBER.
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="simulateQRDeposit();closeModal();">✅ SIMULATE ₹500 DEMO CREDIT</button>
+            <button class="btn btn-ghost" style="width:100%;" onclick="downloadQR('qrModalCanvas')">⬇️ Download QR Image</button>
+            <button class="btn btn-ghost" style="width:100%;" onclick="closeModal()">Close</button>
+        </div>
+    `);
+    setTimeout(() => {
+        const c = document.getElementById('qrModalCanvas');
+        if (c) generateQR(c, 99887, 280);
+    }, 30);
+}
+
+function downloadQR(canvasId) {
+    const c = document.getElementById(canvasId);
+    if (!c) return;
+    const link = document.createElement('a');
+    link.download = 'taks-demo-qr.png';
+    link.href = c.toDataURL('image/png');
+    link.click();
+    showToast('⬇️ QR downloaded', 'success');
+}
+
+let selectedDeposit = null;
+function selectDeposit(amount, btn) {
+    selectedDeposit = amount;
+    document.querySelectorAll('#depositAmounts .amount-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+}
+
+function simulateDeposit() {
+    if (!selectedDeposit) { showToast('Select a demo amount', 'warning'); return; }
+    const amt = selectedDeposit;
+    userData.balance += amt;
+    addTransaction('DEMO DEPOSIT', amt, 'COMPLETED', 'Simulated deposit');
+    saveUserData();
+    showToast(`✅ ${fmt(amt)} DEMO credited`, 'success');
+    selectedDeposit = null;
+    renderDeposit();
+}
+
+function simulateQRDeposit() {
+    userData.balance += 500;
+    addTransaction('DEMO DEPOSIT', 500, 'COMPLETED', 'Simulated QR deposit');
+    saveUserData();
+    showToast('✅ ₹500 DEMO credited via simulated QR', 'success');
+    renderDeposit();
+}
+
+/* ============================================================
+   WITHDRAWAL (DEMO)
+   ============================================================ */
+function renderWithdraw() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">📤 Demo Withdrawal</div>
+                <div class="page-subtitle">Simulate a virtual withdrawal</div>
+            </div>
+            <span class="demo-tag">DEMO ONLY</span>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card card-static">
+                <h3 style="font-size:16px;margin-bottom:12px;">💸 Withdrawal Simulation</h3>
+                <p class="text-muted mb-2" style="font-size:12px;">Range: ₹100 – ₹10,000 (virtual)</p>
+                <div class="form-group"><label>Demo Amount (₹)</label><input type="number" id="wdAmount" min="100" max="10000" value="100"></div>
+                <div class="form-group"><label>Account Holder Name</label><input type="text" id="wdHolder" value="${escapeHtml(userData.bankDetails.holder || '')}"></div>
+                <div class="form-group"><label>Bank Name</label><input type="text" id="wdBank" value="${escapeHtml(userData.bankDetails.bank || '')}"></div>
+                <div class="form-group"><label>Account Number</label><input type="text" id="wdAccount" value="${escapeHtml(userData.bankDetails.account || '')}"></div>
+                <div class="form-group"><label>IFSC Code</label><input type="text" id="wdIfsc" value="${escapeHtml(userData.bankDetails.ifsc || '')}"></div>
+                <button class="btn btn-primary" style="width:100%;" onclick="requestDemoWithdrawal()">📤 SUBMIT DEMO WITHDRAWAL</button>
+            </div>
+            <div class="card card-static">
+                <h3 style="font-size:16px;margin-bottom:12px;">⚠ Important</h3>
+                <ul class="info-list">
+                    <li>❗ <span>No real money is sent.</span></li>
+                    <li>📝 <span>Only a simulated record is created.</span></li>
+                    <li>🔒 <span>Bank details stored only in browser.</span></li>
+                </ul>
+                <div class="demo-notice mt-2" style="text-align:center;">
+                    Demo Contact: 7906108169 – <strong>NOT A PAYMENT NUMBER.</strong>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function requestDemoWithdrawal() {
+    const amt = parseFloat(document.getElementById('wdAmount').value) || 0;
+    const holder = document.getElementById('wdHolder').value.trim();
+    const bank = document.getElementById('wdBank').value.trim();
+    const acct = document.getElementById('wdAccount').value.trim();
+    const ifsc = document.getElementById('wdIfsc').value.trim();
+
+    if (amt < 100) { showToast('Minimum ₹100', 'error'); return; }
+    if (amt > 10000) { showToast('Maximum ₹10,000', 'error'); return; }
+    if (amt > userData.balance) { showToast('Insufficient balance', 'error'); return; }
+    if (!holder || !bank || !acct || !ifsc) { showToast('Fill all bank fields', 'error'); return; }
+
+    userData.bankDetails = { holder, bank, account: acct, ifsc };
+    userData.balance -= amt;
+    userData.spent += amt;
+    addTransaction('DEMO WITHDRAWAL', -amt, 'SIMULATED', 'Demo withdrawal request');
+    saveUserData();
+
+    showModal(`
+        <h3>✅ Demo Withdrawal Submitted</h3>
+        <p>Amount: <strong>${fmt(amt)}</strong></p>
+        <p>Status: <span class="badge badge-warn">SIMULATED</span></p>
+        <p class="text-muted" style="font-size:11px;">Simulated record only. No real money sent.</p>
+        <div class="modal-actions">
+            <button class="btn btn-primary" onclick="closeModal();navTo('withdraw')">OK</button>
+        </div>
+    `);
+}
+
+/* ============================================================
+   REAL WITHDRAWAL DETAILS
+   ============================================================ */
+function renderRealWithdraw() {
+    const main = document.getElementById('mainContent');
+    const txns = userData.transactions.filter(t => t.type === 'DEMO WITHDRAWAL');
+    const totalWithdrawn = txns.reduce((s, t) => s + Math.abs(t.amount), 0);
+
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">💳 Real Withdrawal Details</div>
+                <div class="page-subtitle">Complete withdrawal information</div>
+            </div>
+            <span class="demo-tag">SIMULATION</span>
+        </div>
+
+        <div class="card card-static mb-2" style="background:rgba(255,51,85,0.08);border-color:rgba(255,51,85,0.3);">
+            <div class="flex gap-1" style="align-items:center;">
+                <span style="font-size:24px;">⚠️</span>
+                <div>
+                    <strong style="color:var(--red);">IMPORTANT NOTICE</strong>
+                    <p style="font-size:12px;color:var(--text-secondary);margin:0;">
+                        This is a DEMO. No real money is processed.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-2 mb-2">
+            <div class="card stat-card">
+                <span class="stat-icon">💵</span>
+                <span class="stat-label">Available Balance</span>
+                <span class="stat-value gold">${fmt(userData.balance)}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">📤</span>
+                <span class="stat-label">Total Withdrawn</span>
+                <span class="stat-value red">${fmt(totalWithdrawn)}</span>
+            </div>
+        </div>
+
+        <div class="grid grid-2 mb-2">
+            <div class="card card-static">
+                <h3 style="font-size:15px;margin-bottom:14px;color:var(--accent);">🏦 Bank Account Details</h3>
+                <div class="wd-detail-row"><span class="k">Account Holder</span><span class="v">${escapeHtml(userData.bankDetails.holder || 'Not saved')}</span></div>
+                <div class="wd-detail-row"><span class="k">Bank Name</span><span class="v">${escapeHtml(userData.bankDetails.bank || 'Not saved')}</span></div>
+                <div class="wd-detail-row"><span class="k">Account Number</span><span class="v">${userData.bankDetails.account ? '****' + String(userData.bankDetails.account).slice(-4) : 'Not saved'}</span></div>
+                <div class="wd-detail-row"><span class="k">IFSC Code</span><span class="v">${escapeHtml(userData.bankDetails.ifsc || 'Not saved')}</span></div>
+                <button class="btn btn-ghost" style="width:100%;margin-top:12px;" onclick="navTo('bank')">✏️ Edit Bank Details</button>
+            </div>
+            <div class="card card-static">
+                <h3 style="font-size:15px;margin-bottom:14px;color:var(--gold);">⚙️ Settings</h3>
+                <div class="wd-detail-row"><span class="k">Minimum</span><span class="v">₹100</span></div>
+                <div class="wd-detail-row"><span class="k">Maximum</span><span class="v">₹10,000</span></div>
+                <div class="wd-detail-row"><span class="k">Processing</span><span class="v">Simulated Instant</span></div>
+                <div class="wd-detail-row"><span class="k">Method</span><span class="v">DEMO ONLY</span></div>
+                <div class="wd-detail-row"><span class="k">Fees</span><span class="v" style="color:var(--green);">₹0</span></div>
+                <button class="btn btn-primary" style="width:100%;margin-top:12px;" onclick="navTo('withdraw')">💸 Request Withdrawal</button>
+            </div>
+        </div>
+
+        <div class="card card-static">
+            <div class="flex-between mb-2">
+                <strong>📜 Withdrawal History</strong>
+                <span class="badge badge-info">${txns.length} records</span>
+            </div>
+            ${txns.length ? `
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Date</th><th>Time</th><th>Amount</th><th>Bank</th><th>Account</th><th>Status</th></tr></thead>
+                        <tbody>
+                            ${txns.slice(0, 10).map(t => `
+                                <tr>
+                                    <td>${fmtDate(t.date)}</td>
+                                    <td>${fmtTime(t.date)}</td>
+                                    <td class="amt-neg">${fmt(Math.abs(t.amount))}</td>
+                                    <td>${escapeHtml(userData.bankDetails.bank || '—')}</td>
+                                    <td>${userData.bankDetails.account ? '****' + String(userData.bankDetails.account).slice(-4) : '—'}</td>
+                                    <td><span class="badge badge-warn">SIMULATED</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            ` : `
+                <div style="text-align:center;padding:30px;color:var(--text-muted);">
+                    <div style="font-size:40px;margin-bottom:8px;">📭</div>
+                    <div>No withdrawal records yet</div>
+                </div>
+            `}
+        </div>
+    `;
+}
+
+/* ============================================================
+   BANK
+   ============================================================ */
+function renderBank() {
+    const main = document.getElementById('mainContent');
+    const b = userData.bankDetails || {};
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">🏦 Bank Details</div>
+                <div class="page-subtitle">Saved locally for demo only</div>
+            </div>
+        </div>
+
+        <div class="card card-static" style="max-width:520px;">
+            <div class="form-group"><label>Account Holder Name</label><input type="text" id="bkHolder" value="${escapeHtml(b.holder || '')}"></div>
+            <div class="form-group"><label>Bank Name</label><input type="text" id="bkBank" value="${escapeHtml(b.bank || '')}"></div>
+            <div class="form-group"><label>Account Number</label><input type="text" id="bkAccount" value="${escapeHtml(b.account || '')}"></div>
+            <div class="form-group"><label>IFSC Code</label><input type="text" id="bkIfsc" value="${escapeHtml(b.ifsc || '')}"></div>
+            <button class="btn btn-primary" style="width:100%;" onclick="saveBankDetails()">💾 SAVE DEMO DETAILS</button>
+            <div class="demo-notice mt-2" style="text-align:center;">
+                For demonstration only. Not used for payouts.
+            </div>
+        </div>
+    `;
+}
+
+function saveBankDetails() {
+    userData.bankDetails = {
+        holder: document.getElementById('bkHolder').value.trim(),
+        bank: document.getElementById('bkBank').value.trim(),
+        account: document.getElementById('bkAccount').value.trim(),
+        ifsc: document.getElementById('bkIfsc').value.trim()
+    };
+    saveUserData();
+    showToast('✅ Bank details saved', 'success');
+}
+
+/* ============================================================
+   TRANSACTIONS
+   ============================================================ */
+function renderTransactions() {
+    const main = document.getElementById('mainContent');
+    let list = userData.transactions;
+    if (txFilter === 'rewards') list = list.filter(t => t.type === 'DEMO REWARD');
+    if (txFilter === 'deposits') list = list.filter(t => t.type === 'DEMO DEPOSIT');
+    if (txFilter === 'withdrawals') list = list.filter(t => t.type === 'DEMO WITHDRAWAL');
+
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">📜 Transaction History</div>
+                <div class="page-subtitle">All demo transactions are simulated</div>
+            </div>
+            <span class="demo-tag">NO CASH VALUE</span>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn ${txFilter==='all'?'active':''}" onclick="setFilter('all')">ALL</button>
+            <button class="filter-btn ${txFilter==='rewards'?'active':''}" onclick="setFilter('rewards')">REWARDS</button>
+            <button class="filter-btn ${txFilter==='deposits'?'active':''}" onclick="setFilter('deposits')">DEPOSITS</button>
+            <button class="filter-btn ${txFilter==='withdrawals'?'active':''}" onclick="setFilter('withdrawals')">WITHDRAWALS</button>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>Date</th><th>Time</th><th>Type</th><th>Amount</th><th>Status</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    ${list.length ? list.map(t => `
+                        <tr>
+                            <td>${fmtDate(t.date)}</td>
+                            <td>${fmtTime(t.date)}</td>
+                            <td>${escapeHtml(t.type)}</td>
+                            <td class="${t.amount >= 0 ? 'amt-pos' : 'amt-neg'}">${t.amount >= 0 ? '+' : ''}${fmt(Math.abs(t.amount))}</td>
+                            <td><span class="badge ${t.status === 'COMPLETED' ? 'badge-success' : 'badge-warn'}">${escapeHtml(t.status)}</span></td>
+                            <td>${escapeHtml(t.desc)}</td>
+                        </tr>
+                    `).join('') : `<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px;">No transactions</td></tr>`}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+function setFilter(f) { txFilter = f; renderTransactions(); }
+
+/* ============================================================
+   DAILY REWARDS
+   ============================================================ */
+function renderDaily() {
+    const main = document.getElementById('mainContent');
+    const rewards = [10, 20, 30, 40, 50, 75, 100];
+    const today = todayStr();
+    const canClaim = userData.lastDailyClaim !== today;
+
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">🎁 Daily Rewards</div>
+                <div class="page-subtitle">Claim once per day</div>
+            </div>
+            <span class="demo-tag">7-DAY STREAK</span>
+        </div>
+
+        <div class="card card-static">
+            <div class="reward-grid">
+                ${rewards.map((r, i) => {
+                    const dayNum = i + 1;
+                    const claimed = userData.claimedRewards.includes(dayNum);
+                    const isToday = !claimed && canClaim && (userData.claimedRewards.length === i);
+                    const locked = !claimed && !isToday;
+                    return `
+                        <div class="reward-cell ${claimed ? 'claimed' : ''} ${locked ? 'locked' : ''}"
+                             onclick="${isToday ? `claimDaily(${dayNum}, ${r})` : ''}">
+                            ${claimed ? '<span class="chk">✓</span>' : ''}
+                            <div class="day">Day ${dayNum}</div>
+                            <div class="rwd">₹${r}</div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+            <p class="text-muted mt-2" style="font-size:12px;">
+                ${canClaim ? '👉 Tap the highlighted cell to claim today\'s reward.' : '✅ Already claimed today!'}
+            </p>
+        </div>
+    `;
+}
+
+function claimDaily(day, amount) {
+    const today = todayStr();
+    if (userData.lastDailyClaim === today) { showToast('Already claimed today', 'warning'); return; }
+    if (userData.claimedRewards.includes(day)) { showToast('Already claimed', 'warning'); return; }
+    userData.claimedRewards.push(day);
+    userData.lastDailyClaim = today;
+    userData.balance += amount;
+    userData.totalRewards += amount;
+    addTransaction('DEMO REWARD', amount, 'COMPLETED', `Daily reward Day ${day}`);
+    addXP(15);
+    saveUserData();
+    showToast(`🎁 +${fmt(amount)} DEMO claimed!`, 'success');
+    renderDaily();
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+function renderProfile() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">👤 Profile</div>
+                <div class="page-subtitle">Demo account info</div>
+            </div>
+        </div>
+
+        <div class="card card-static" style="max-width:520px;">
+            <div class="flex" style="align-items:center;gap:16px;margin-bottom:20px;">
+                <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;">
+                    ${escapeHtml((currentUser.name || 'U').charAt(0).toUpperCase())}
+                </div>
+                <div>
+                    <div style="font-size:18px;font-weight:800;">${escapeHtml(currentUser.name)}</div>
+                    <div class="text-muted" style="font-size:12px;">@${escapeHtml(currentUser.username)}</div>
+                </div>
+            </div>
+            <div class="info-list">
+                <li><strong>Full Name:</strong> <span>${escapeHtml(currentUser.name)}</span></li>
+                <li><strong>Username:</strong> <span>${escapeHtml(currentUser.username)}</span></li>
+                <li><strong>Mobile:</strong> <span>${escapeHtml(currentUser.mobile)}</span></li>
+                <li><strong>Email:</strong> <span>${escapeHtml(currentUser.email)}</span></li>
+                <li><strong>Account Type:</strong> <span>DEMO / LOCAL BROWSER</span></li>
+                <li><strong>Level:</strong> <span>${userData.level}</span></li>
+                <li><strong>High Score:</strong> <span>${userData.highScore}</span></li>
+            </div>
+            <div class="demo-notice mt-2" style="text-align:center;">
+                Demo Contact: 7906108169 – <strong>NOT A PAYMENT NUMBER.</strong>
+            </div>
+        </div>
+    `;
+}
+
+/* ============================================================
+   SETTINGS
+   ============================================================ */
+function renderSettings() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">⚙️ Settings</div>
+                <div class="page-subtitle">Demo preferences</div>
+            </div>
+        </div>
+
+        <div class="card card-static" style="max-width:520px;">
+            <div class="setting-row">
+                <div>
+                    <div class="lbl">🔔 Notifications</div>
+                    <div class="sub">Show toast notifications</div>
+                </div>
+                <div class="toggle ${settings.notifications ? 'on' : ''}" onclick="toggleSetting('notifications')"></div>
+            </div>
+            <div class="setting-row">
+                <div>
+                    <div class="lbl">🔊 Sound</div>
+                    <div class="sub">Sound effects</div>
+                </div>
+                <div class="toggle ${settings.sound ? 'on' : ''}" onclick="toggleSetting('sound')"></div>
+            </div>
+            <div class="setting-row" style="background:rgba(255,51,85,0.06);border-color:rgba(255,51,85,0.3);">
+                <div>
+                    <div class="lbl" style="color:var(--red);">🗑️ Reset Demo Data</div>
+                    <div class="sub">Erase all progress</div>
+                </div>
+                <button class="btn btn-danger" style="padding:8px 16px;font-size:12px;" onclick="resetDemoData()">RESET</button>
+            </div>
+        </div>
+    `;
+}
+
+function toggleSetting(key) {
+    settings[key] = !settings[key];
+    saveSettings();
+    renderSettings();
+    showToast(`${key} ${settings[key] ? 'enabled' : 'disabled'}`, 'info');
+}
+
+function resetDemoData() {
+    showModal(`
+        <h3>⚠️ Reset Demo Data</h3>
+        <p>This will permanently clear your demo wallet, transactions, tasks, and achievements.</p>
+        <p style="color:var(--red);font-weight:700;">Cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-danger" onclick="confirmReset()">Reset Now</button>
+        </div>
+    `);
+}
+
+function confirmReset() {
+    userData = createFreshUserData();
+    saveUserData();
+    closeModal();
+    showToast('🗑️ Demo data reset', 'success');
+    navTo('dashboard');
+}
+
+/* ============================================================
+   INFO
+   ============================================================ */
+function renderInfo() {
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">ℹ️ Game Information</div>
+                <div class="page-subtitle">Everything about this demo</div>
+            </div>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card card-static">
+                <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent);">🎮 How it Works</h3>
+                <ul class="info-list">
+                    <li>✅ <span><strong>Tasks:</strong> Complete to earn virtual coins.</span></li>
+                    <li>🎯 <span><strong>Cross Game:</strong> Play the mini-game.</span></li>
+                    <li>💰 <span><strong>Wallet:</strong> Virtual demo balance.</span></li>
+                    <li>📥 <span><strong>Deposit:</strong> Simulates credits.</span></li>
+                    <li>📤 <span><strong>Withdrawal:</strong> Simulated record only.</span></li>
+                    <li>🎁 <span><strong>Daily Rewards:</strong> Once per day.</span></li>
+                    <li>🏆 <span><strong>Achievements:</strong> Unlock badges.</span></li>
+                </ul>
+            </div>
+            <div class="card card-static">
+                <h3 style="font-size:15px;margin-bottom:12px;color:var(--gold);">⚖️ Rules</h3>
+                <ul class="info-list">
+                    <li>⚠️ <span>All money is <strong>virtual</strong>.</span></li>
+                    <li>📥 <span>Deposits modify <strong>local balance only</strong>.</span></li>
+                    <li>📤 <span>Withdrawals create <strong>simulated records</strong>.</span></li>
+                    <li>❌ <span>No real payment accepted.</span></li>
+                    <li>❌ <span>No real payout made.</span></li>
+                    <li>❌ <span>Demo points have no cash value.</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card card-static mt-2">
+            <h3 style="font-size:15px;margin-bottom:12px;color:var(--accent);">🛡️ Security Notice</h3>
+            <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;">
+                Frontend-only demo. Uses browser localStorage. Do NOT use for real financial transactions.
+                localStorage is NOT secure.
+            </p>
+            <div class="demo-notice mt-2" style="text-align:center;background:rgba(255,51,85,0.08);border-color:rgba(255,51,85,0.25);color:var(--red);">
+                ⚠ Demo Contact: 7906108169 – NOT A PAYMENT NUMBER.
+            </div>
+        </div>
+    `;
+}
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+function renderAdmin() {
+    const main = document.getElementById('mainContent');
+    const users = loadUsers();
+
+    main.innerHTML = `
+        <div class="page-header">
+            <div>
+                <div class="page-title">🛡️ Admin Demo Panel</div>
+                <div class="page-subtitle">Frontend-only local demo</div>
+            </div>
+        </div>
+
+        <div class="card card-static mb-2" style="background:rgba(255,51,85,0.06);border-color:rgba(255,51,85,0.3);">
+            <span style="font-size:12px;color:var(--red);">⚠ Frontend-only — not secure.</span>
+        </div>
+
+        <div class="grid grid-4 mb-2">
+            <div class="card stat-card">
+                <span class="stat-icon">👥</span>
+                <span class="stat-label">Total Users</span>
+                <span class="stat-value accent">${users.length}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">📋</span>
+                <span class="stat-label">Total Tasks</span>
+                <span class="stat-value green">${tasks.length}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">💳</span>
+                <span class="stat-label">Transactions</span>
+                <span class="stat-value gold">${userData.transactions.length}</span>
+            </div>
+            <div class="card stat-card">
+                <span class="stat-icon">🏆</span>
+                <span class="stat-label">Total Rewards</span>
+                <span class="stat-value gold">${fmt(userData.totalRewards)}</span>
+            </div>
+        </div>
+
+        <div class="card card-static mb-2">
+            <div class="flex-between mb-2">
+                <strong>📋 Task Management</strong>
+                <button class="btn btn-primary" style="width:auto;padding:8px 16px;font-size:12px;" onclick="adminAddTask()">+ Add Task</button>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Icon</th><th>Title</th><th>Reward</th><th>Actions</th></tr></thead>
+                    <tbody>
+                        ${tasks.map(t => `
+                            <tr>
+                                <td style="font-size:20px;">${t.icon || '📌'}</td>
+                                <td>${escapeHtml(t.title)}</td>
+                                <td class="amt-pos">${fmt(t.reward)}</td>
+                                <td>
+                                    <button class="btn btn-ghost" style="padding:6px 10px;font-size:11px;" onclick="adminEditTask('${t.id}')">✏️</button>
+                                    <button class="btn btn-danger" style="padding:6px 10px;font-size:11px;" onclick="adminDeleteTask('${t.id}')">🗑️</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card card-static">
+            <strong>👥 Users</strong>
+            <div class="table-wrap mt-2">
+                <table>
+                    <thead><tr><th>Name</th><th>Username</th><th>Mobile</th><th>Email</th></tr></thead>
+                    <tbody>
+                        ${users.length ? users.map(u => `
+                            <tr>
+                                <td>${escapeHtml(u.name)}</td>
+                                <td>@${escapeHtml(u.username)}</td>
+                                <td>${escapeHtml(u.mobile)}</td>
+                                <td>${escapeHtml(u.email)}</td>
+                            </tr>
+                        `).join('') : `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-muted);">No users</td></tr>`}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+}
+
+function adminAddTask() {
+    showModal(`
+        <h3>➕ Add Task</h3>
+        <div class="form-group"><label>Icon</label><input type="text" id="atIcon" value="📌" maxlength="2"></div>
+        <div class="form-group"><label>Title</label><input type="text" id="atTitle"></div>
+        <div class="form-group"><label>Description</label><input type="text" id="atDesc"></div>
+        <div class="form-group"><label>Reward (₹)</label><input type="number" id="atReward" value="20" min="1"></div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveAdminTask()">Save</button>
+        </div>
+    `);
+}
+
+function saveAdminTask() {
+    const icon = document.getElementById('atIcon').value.trim() || '📌';
+    const title = document.getElementById('atTitle').value.trim();
+    const desc = document.getElementById('atDesc').value.trim() || 'Complete this task.';
+    const reward = parseInt(document.getElementById('atReward').value) || 20;
+    if (!title) { showToast('Enter title', 'error'); return; }
+    tasks.push({ id: 't_' + uid(), icon, title, desc, reward });
+    saveTasks();
+    closeModal();
+    showToast('✅ Task added', 'success');
+    renderAdmin();
+}
+
+function adminEditTask(id) {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    showModal(`
+        <h3>✏️ Edit Task</h3>
+        <div class="form-group"><label>Icon</label><input type="text" id="etIcon" value="${escapeHtml(task.icon)}" maxlength="2"></div>
+        <div class="form-group"><label>Title</label><input type="text" id="etTitle" value="${escapeHtml(task.title)}"></div>
+        <div class="form-group"><label>Description</label><input type="text" id="etDesc" value="${escapeHtml(task.desc)}"></div>
+        <div class="form-group"><label>Reward (₹)</label><input type="number" id="etReward" value="${task.reward}" min="1"></div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="updateAdminTask('${id}')">Update</button>
+        </div>
+    `);
+}
+
+function updateAdminTask(id) {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    task.icon = document.getElementById('etIcon').value.trim() || '📌';
+    task.title = document.getElementById('etTitle').value.trim();
+    task.desc = document.getElementById('etDesc').value.trim();
+    task.reward = parseInt(document.getElementById('etReward').value) || 20;
+    saveTasks();
+    closeModal();
+    showToast('✅ Updated', 'success');
+    renderAdmin();
+}
+
+function adminDeleteTask(id) {
+    showModal(`
+        <h3>🗑️ Delete Task</h3>
+        <p>Delete this task permanently?</p>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-danger" onclick="confirmDeleteTask('${id}')">Delete</button>
+        </div>
+    `);
+}
+
+function confirmDeleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    saveTasks();
+    closeModal();
+    showToast('🗑️ Deleted', 'success');
+    renderAdmin();
+}
+
+/* ============================================================
+   KEYBOARD
+   ============================================================ */
+document.addEventListener('keydown', (e) => {
+    if (!currentUser) return;
+    if (document.querySelector('.modal-overlay.open')) return;
+    const tag = document.activeElement.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+    const k = e.key.toLowerCase();
+    if (document.getElementById('gameCanvas') && gameState.running) {
+        if (k === 'arrowup' || k === 'w') { e.preventDefault(); movePlayer('up'); }
+        if (k === 'arrowdown' || k === 's') { e.preventDefault(); movePlayer('down'); }
+        if (k === 'arrowleft' || k === 'a') { e.preventDefault(); movePlayer('left'); }
+        if (k === 'arrowright' || k === 'd') { e.preventDefault(); movePlayer('right'); }
+    }
+});
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeModal();
+    });
+    checkSession();
+});
+</script>
+</body>
+</html>
